@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from db.DBClass import BorgDB
 
@@ -20,8 +20,8 @@ def test_db_connection():
 test_db_connection()
 
 @app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+def index():  # put application's code here
+    return render_template("index.html")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,70 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(16, 5vw); /* Adjust the width as needed */
+  grid-template-rows: repeat(7, 9vh); /* Adjust the height as needed */
+  gap: 0.5vw; /* Adjust the gap between grid items */
+  margin-bottom: 2vh; /* Add margin at the bottom for spacing */
+}
+
+.grid-item {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+/* CSS */
+.grid-item.clicked.row-1 {
+  background-color: violet;
+}
+.grid-item.clicked.row-2 {
+  background-color: indigo;
+}
+.grid-item.clicked.row-3 {
+  background-color: blue;
+}
+.grid-item.clicked.row-4 {
+  background-color: green;
+}
+.grid-item.clicked.row-5 {
+  background-color: yellow;
+}
+.grid-item.clicked.row-6 {
+  background-color: orange;
+}
+.grid-item.clicked.row-7 {
+  background-color: red;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  width: 15vw; /* Set a fixed width for the buttons */
+  margin: 1vh; /* Adjust vertical margin */
+  padding: 1vh; /* Adjust padding */
+  font-size: 1vh; /* Adjust font size */
+  cursor: pointer;
+}
+
+/* Adjust the icon size for consistency */
+button i {
+  font-size: 1rem; /* Set the icon size */
+  margin-right: 1vh; /* Add space to the right of the icon */
+}
