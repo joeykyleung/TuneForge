@@ -3,6 +3,7 @@ import os
 
 import psycopg as db
 
+
 class BorgDB:
     _shared_state = {}
 
@@ -60,6 +61,15 @@ class BorgDB:
             curs.execute(config[query_type][query], params)
 
         return curs.fetchall()
+
+    @staticmethod
+    def test_db_connection():
+        try:
+            BorgDB().get_connection()
+            print("DB connected")
+        except Exception as e:
+            print(e)
+            print("DB connection failed.")
 
 
 if __name__ == "__main__":
