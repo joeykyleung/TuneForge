@@ -1,5 +1,6 @@
 # BeatBoutique
-Placeholder for SSE term 2 project.
+
+Core backend for SSE Term 2 project.
 
 Required Environment variables:
 DB_PWD=imperial;
