@@ -34,6 +34,10 @@ def clearcache():
     cache.clear()
     return redirect('/', code=200)
 
+@app.route('/testms')
+def testms():
+    return redirect(fetch_microservice('dummy1'))
+
 
 @cache.memoize(1500)
 def fetch_microservice(microservice):
