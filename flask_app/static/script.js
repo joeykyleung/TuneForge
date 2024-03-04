@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     5: "G4",
     6: "A4",
     7: "B4",
-    
+
   };
 
   // Arrays to store clicked notes for each column
@@ -117,6 +117,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
+
+    //send json (notes, speed) to backend
+    const data = {
+      "notes": clickedNotes,
+      "speed": parseFloat(speedInput.value),
+    };
+    fetch("/jsonmidi", {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then(response => response.json())
+    .catch(error => console.log(error));
+
+    //get callback link for midi file
+    //play midi file
   }
 
   // Function to play sound at a specific time
