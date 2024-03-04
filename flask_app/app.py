@@ -54,10 +54,10 @@ def json_to_midi():
     notes_converter_endpoint = notes_converter_url + '/'
     response = requests.post(notes_converter_endpoint, json=data)
     if response.status_code == '200':
-        #download
+        #toDo: download
         pass
     else:
-        #error
+        #toDo: error
         return 'error'
 
 
