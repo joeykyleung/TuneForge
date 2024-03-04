@@ -53,7 +53,7 @@ def json_to_midi():
     notes_converter_url = fetch_microservice(Microservices.NOTES_CONVERTER.value)
     notes_converter_endpoint = notes_converter_url + '/'
     response = requests.post(notes_converter_endpoint, json=data)
-    if response.status_code == '200':
+    if response.status_code == '201':
         #toDo: download
         pass
     else:
