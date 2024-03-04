@@ -1,10 +1,19 @@
 from os import environ
 
+import requests
 from flask import Flask, render_template, redirect, request, jsonify
 from flask_caching import Cache
 
 from db.DBClass import BorgDB
 from db.DBQueries import fetch_microservice_url
+
+from enum import Enum
+
+
+class Microservices(Enum):
+    NOTES_CONVERTER = "notes-converter"
+
+# print(Microservices.NOTES_CONVERTER.value)
 
 app = Flask(__name__)
 config = {
@@ -37,6 +46,20 @@ def clearcache():
 @app.route('/testms')
 def testms():
     return redirect(fetch_microservice('dummy1'))
+
+@app.route('/jsonmidi', methods=["POST"])
+def json_to_midi():
+    data = request.get_json()
+    notes_converter_url = fetch_microservice(Microservices.NOTES_CONVERTER.value)
+    notes_converter_endpoint = notes_converter_url + '/'
+    response = requests.post(notes_converter_endpoint, json=data)
+    if response.status_code == '200':
+        #download
+        pass
+    else:
+        #error
+        return 'error'
+
 
 
 @cache.memoize(1500)
