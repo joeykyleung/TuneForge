@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     5: "G4",
     6: "A4",
     7: "B4",
+    
   };
 
   // Arrays to store clicked notes for each column
