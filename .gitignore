@@ -3,3 +3,5 @@
 /*.xml
 .idea/
 /.venv/
+db/__pycache__/
+flask_app/__pycache__

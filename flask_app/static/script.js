@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       item.classList.add("clicked");
       playSound(rowNotes[row]);
       // Add the clicked note to the corresponding column in clickedNotes
-      clickedNotes[columnIndex].push(rowNotes[row]);
+      clickedNotes[columnIndex].push(noteToFrequency(rowNotes[row]));
     } else {
       item.classList.remove("clicked");
       // Remove the clicked note from the corresponding column in clickedNotes
@@ -79,11 +79,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Helper function to convert note to frequency
   function noteToFrequency(note) {
-    const A4Frequency = 440; // A4 frequency in Hz
-    const semitoneRatio = Math.pow(2, 1 / 12);
-    const distanceFromA4 =
-      note.charCodeAt(0) - "A".charCodeAt(0) + (note.length === 2 ? 1 : 0);
-    return A4Frequency * Math.pow(semitoneRatio, distanceFromA4);
+    // const A4Frequency = 440; // A4 frequency in Hz
+    // const semitoneRatio = Math.pow(2, 1 / 12);
+    // const distanceFromA4 =
+    //   note.charCodeAt(0) - "A".charCodeAt(0) + (note.length === 2 ? 1 : 0);
+    // return A4Frequency * Math.pow(semitoneRatio, distanceFromA4);
+
+    const mapping = {
+      "C4": 261.63,
+      "D4": 293.66,
+      "E4": 329.63,
+      "F4": 349.23,
+      "G4": 392,
+      "A4": 440,
+      "B4": 493.88,
+    };
+    return mapping[note];
   }
 
   // Play button event listener
@@ -115,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const gainNode = audioContext.createGain();
 
     oscillator.type = "triangle";
-    oscillator.frequency.setValueAtTime(noteToFrequency(note), startTime);
+    oscillator.frequency.setValueAtTime(note, startTime);
 
     gainNode.gain.setValueAtTime(0, startTime);
     gainNode.gain.linearRampToValueAtTime(0.7, startTime + 0.05);
