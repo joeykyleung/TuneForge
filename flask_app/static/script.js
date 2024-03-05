@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
-    .then(response => response)
+    .then(response => response.json())
     .catch(error => console.log(error));
   }
 });
