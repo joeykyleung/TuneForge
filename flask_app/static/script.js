@@ -101,12 +101,13 @@ document.addEventListener("DOMContentLoaded", function () {
     return mapping[note];
   } 
 
+  var clickedNotes = Array.from({ length: 16 }, () => []);
+
   // Play button event listener
   const playButton = document.getElementById("play-button");
   playButton.addEventListener("click", playSequence);
 
   function getNotes() {
-    const clickedNotes = Array.from({ length: 16 }, () => []);
     const clickedElements = document.getElementsByClassName("clicked");
     
     Array.from(clickedElements).forEach(element => {
@@ -121,11 +122,10 @@ document.addEventListener("DOMContentLoaded", function () {
           clickedNotes[parseInt(column - 1, 10)].push(freq);
       }
     });
-    return clickedNotes;
   }
 
   function playSequence() {
-    clickedNotes = getNotes();
+    getNotes();
     console.log(clickedNotes);
     const maxNotes = Math.max(...clickedNotes.map((column) => column.length));
     const sequenceDuration = 300 / speedInput.value; // Adjust the duration between columns
@@ -140,21 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
-
-    //send json (notes, speed) to backend
-    const data = {
-      "notes": clickedNotes,
-      "speed": parseFloat(speedInput.value),
-    };
-    fetch("/jsonmidi", {
-      method: "POST",
-      body: data,
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then(response => response.json())
-    .catch(error => console.log(error));
   }
 
   // Function to play sound at a specific time
@@ -175,5 +160,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     oscillator.start(startTime);
     oscillator.stop(startTime + duration);
+  }
+  
+  const downloadButton = document.getElementById("download-button");
+  downloadButton.addEventListener("click", sendToBackend);
+
+  function sendToBackend() {
+    //send json (notes, speed) to backend
+    const data = {
+      "notes": clickedNotes,
+      "speed": parseFloat(speedInput.value),
+    };
+
+    console.log(data);
+    fetch("/jsonmidi", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then(response => response)
+    .catch(error => console.log(error));
   }
 });

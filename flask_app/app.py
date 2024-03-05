@@ -50,9 +50,11 @@ def testms():
 @app.route('/jsonmidi', methods=["POST"])
 def json_to_midi():
     data = request.get_json()
+    print(request)
     notes_converter_url = fetch_microservice(Microservices.NOTES_CONVERTER.value)
     notes_converter_endpoint = notes_converter_url + '/'
     app.logger.info("Sending request to " + notes_converter_endpoint + " with data: " + data)
+    print("Sending request to " + notes_converter_endpoint + " with data: " + data)
     response = requests.post(notes_converter_endpoint, json=data)
     if response.status_code == '201':
         #toDo: download wav
