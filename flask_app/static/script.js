@@ -155,9 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.json())
     .catch(error => console.log(error));
-
-    //get callback link for midi file
-    //play midi file
   }
 
   // Function to play sound at a specific time
