@@ -59,11 +59,11 @@ def json_to_midi():
     if response.status_code == '201':
         #toDo: download wav
         #toDo: send to mood service and stuff
-        app.logger.info("Successfully pinged notes converter")
         pass
+        return "Success", 201
     else:
         #toDo: error
-        return 'error'
+        return 'error', 500
 
 
 
