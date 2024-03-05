@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     fetch("/jsonmidi", {
       method: "POST",
-      body: data,
+      body: JSON.stringify(data),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
