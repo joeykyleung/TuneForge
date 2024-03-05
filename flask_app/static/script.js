@@ -14,13 +14,21 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Arrays to store clicked notes for each column
-  const clickedNotes = Array.from({ length: 16 }, () => []);
+  // const clickedNotes = Array.from({ length: 16 }, () => []);
 
   // Create the grid
   for (let row = 1; row <= 7; row++) {
-    for (let col = 1; col <= 16; col++) {
+    for (let col = 0; col <= 16; col++) {
+      if (col === 0) {
+        const sideItem = document.createElement("div");
+        sideItem.classList.add("side");
+        sideItem.innerHTML = rowNotes[row];
+        gridContainer.appendChild(sideItem);
+        continue;
+      }
       const gridItem = document.createElement("div");
       gridItem.classList.add("grid-item", `row-${row}`);
+      gridItem.setAttribute("data-row", row)
       gridItem.setAttribute("data-column", col); // Add a data attribute for the column
       gridItem.addEventListener("click", function () {
         toggleColorAndSound(gridItem, row);
@@ -32,24 +40,24 @@ document.addEventListener("DOMContentLoaded", function () {
   // Toggle color on click and play sound
   function toggleColorAndSound(item, row) {
     const isClicked = item.classList.contains("clicked");
-    const columnIndex = parseInt(item.getAttribute("data-column"), 10) - 1;
+    // const columnIndex = parseInt(item.getAttribute("data-column"), 10) - 1;
 
-    if (!clickedNotes[columnIndex]) {
-      clickedNotes[columnIndex] = [];
-    }
+    // if (!clickedNotes[columnIndex]) {
+    //   clickedNotes[columnIndex] = [];
+    // }
 
     if (!isClicked) {
       item.classList.add("clicked");
       playSound(rowNotes[row]);
       // Add the clicked note to the corresponding column in clickedNotes
-      clickedNotes[columnIndex].push(noteToFrequency(rowNotes[row]));
+      // clickedNotes[columnIndex].push(noteToFrequency(rowNotes[row]));
     } else {
       item.classList.remove("clicked");
       // Remove the clicked note from the corresponding column in clickedNotes
-      const noteIndex = clickedNotes[columnIndex].indexOf(rowNotes[row]);
-      if (noteIndex !== -1) {
-        clickedNotes[columnIndex].splice(noteIndex, 1);
-      }
+      // const noteIndex = clickedNotes[columnIndex].indexOf(rowNotes[row]);
+      // if (noteIndex !== -1) {
+      //   clickedNotes[columnIndex].splice(noteIndex, 1);
+      // }
     }
   }
 
@@ -76,15 +84,10 @@ document.addEventListener("DOMContentLoaded", function () {
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 0.3); // Adjust duration as needed
   }
+  
 
   // Helper function to convert note to frequency
   function noteToFrequency(note) {
-    // const A4Frequency = 440; // A4 frequency in Hz
-    // const semitoneRatio = Math.pow(2, 1 / 12);
-    // const distanceFromA4 =
-    //   note.charCodeAt(0) - "A".charCodeAt(0) + (note.length === 2 ? 1 : 0);
-    // return A4Frequency * Math.pow(semitoneRatio, distanceFromA4);
-
     const mapping = {
       "C4": 261.63,
       "D4": 293.66,
@@ -95,16 +98,36 @@ document.addEventListener("DOMContentLoaded", function () {
       "B4": 493.88,
     };
     return mapping[note];
-  }
+  } 
 
   // Play button event listener
   const playButton = document.getElementById("play-button");
   playButton.addEventListener("click", playSequence);
 
+  function getNotes() {
+    const clickedNotes = Array.from({ length: 16 }, () => []);
+    const clickedElements = document.getElementsByClassName("clicked");
+    
+    Array.from(clickedElements).forEach(element => {
+      // Get the values of data-row and data-column attributes
+      const row = element.getAttribute("data-row");
+      const column = element.getAttribute("data-column");
+
+      // Check if row and column are valid numbers
+      if (!isNaN(row) && !isNaN(column)) {
+          // Add the element to the corresponding position in clickedNotes
+          freq = noteToFrequency(rowNotes[row]);
+          clickedNotes[parseInt(column - 1, 10)].push(freq);
+      }
+    });
+    return clickedNotes;
+  }
+
   function playSequence() {
+    clickedNotes = getNotes();
     console.log(clickedNotes);
     const maxNotes = Math.max(...clickedNotes.map((column) => column.length));
-    const sequenceDuration = 300; // Adjust the duration between columns
+    const sequenceDuration = 300 / speedInput.value; // Adjust the duration between columns
 
     for (let col = 0; col < clickedNotes.length; col++) {
       for (let noteIndex = 0; noteIndex < maxNotes; noteIndex++) {
@@ -112,14 +135,14 @@ document.addEventListener("DOMContentLoaded", function () {
           const note = clickedNotes[col][noteIndex];
           const startTime =
             audioContext.currentTime + (col * sequenceDuration) / 1000;
-          playSoundAtTime(note, startTime, parseFloat(speedInput.value)); // Pass speed value
+          playSoundAtTime(note, startTime); // Pass speed value
         }
       }
     }
   }
 
   // Function to play sound at a specific time
-  function playSoundAtTime(note, startTime, speed) {
+  function playSoundAtTime(note, startTime) {
     const duration = 0.3; // Default duration, you can adjust this if needed
 
     const oscillator = audioContext.createOscillator();
@@ -130,12 +153,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     gainNode.gain.setValueAtTime(0, startTime);
     gainNode.gain.linearRampToValueAtTime(0.7, startTime + 0.05);
-    gainNode.gain.linearRampToValueAtTime(0, startTime + duration / speed); // Adjust duration based on speed
 
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
     oscillator.start(startTime);
-    oscillator.stop(startTime + duration / speed); // Adjust duration based on speed
+    oscillator.stop(startTime + duration);
   }
 });

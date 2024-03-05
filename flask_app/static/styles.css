@@ -4,6 +4,14 @@ body {
   justify-content: center;
 }
 
+.side{
+  display: flex;
+  flex-direction: column;
+  width: 5%;
+  align-items: right;
+  text-align: center;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -13,7 +21,7 @@ body {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(16, 5vw); /* Adjust the width as needed */
+  grid-template-columns: repeat(17, 5vw); /* Adjust the width as needed */
   grid-template-rows: repeat(7, 9vh); /* Adjust the height as needed */
   gap: 0.5vw; /* Adjust the gap between grid items */
   margin-bottom: 2vh; /* Add margin at the bottom for spacing */
