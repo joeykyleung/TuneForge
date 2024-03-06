@@ -66,7 +66,7 @@ def error_page(e=None):
 @app.route('/download', methods=["POST"])
 def download_button():
     # data received is notes
-    notes = request.get_json()
+    notes = add_junk(request.get_json())
     notes_response = convert_notes_to_midi(notes)
     app.logger.info("Response:" + str(notes_response.status_code)
                     + " with text: " + notes_response.text)
@@ -90,6 +90,12 @@ def download_button():
     app.logger.info("Finished everything except downloading. "+ local_wav)
     return send_file('../' + local_wav, as_attachment=True)
 
+
+def add_junk(notes):
+    junk = int(20 * notes['speed'])
+    notes['notes'].extend([[] for i in range(junk - len(notes))])
+    notes['notes'].append([440])
+    return notes
 
 def convert_notes_to_midi(notes):
     notes_converter_url = fetch_microservice(
