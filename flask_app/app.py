@@ -81,12 +81,14 @@ def download_button():
 
     local_wav = downloads_folder + wav_blob
     try:
+        app.logger.info("trying to download to " + local_wav + " from " + wav_blob)
         azureStorage.download(local_wav, wav_blob)
     except Exception as e:
         app.logger.error(e)
         return 'File download error', 500
     # toDo: send to mood service and stuff
-    return send_file('../' + local_wav), 200
+    app.logger.info("Finished everything except downloading. "+ local_wav)
+    return send_file('../' + local_wav, as_attachment=True)
 
 
 def convert_notes_to_midi(notes):
@@ -101,10 +103,11 @@ def convert_notes_to_midi(notes):
 def get_wav_from_midi(midi_blob):
     wavexporter_url = fetch_microservice_url(Microservices.WAVE_EXPORTER.value)
     wavexporter_endpoint = wavexporter_url + '/'
-    midi_post = jsonify({'midi': midi_blob})
+    midi_dict = {'midi' : midi_blob}
+
     app.logger.info('Sending request to ' + wavexporter_endpoint
                     + ' with midi blob: ' + str(midi_blob))
-    return requests.post(wavexporter_endpoint, json=midi_post)
+    return requests.post(wavexporter_endpoint, json=midi_dict)
 
 
 @cache.memoize(1500)
