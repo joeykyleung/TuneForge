@@ -36,7 +36,7 @@ BorgDB.test_db_connection()
 
 @app.route('/')
 def home_page():
-    os.remove(downloads_folder + '*')
+    # toDo: remove stuff from downloads folder.
     return render_template('home_page.html')
 
 
