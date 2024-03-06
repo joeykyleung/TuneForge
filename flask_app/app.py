@@ -9,6 +9,7 @@ from db.DBQueries import fetch_microservice_url
 from storage import azureStorage
 
 from enum import Enum
+import glob
 
 
 class Microservices(Enum):
@@ -36,7 +37,7 @@ BorgDB.test_db_connection()
 
 @app.route('/')
 def home_page():
-    # toDo: remove stuff from downloads folder.
+    remove_all_files(downloads_folder)
     return render_template('home_page.html')
 
 
@@ -104,3 +105,9 @@ def get_wav_from_midi(midi_blob):
 @cache.memoize(1500)
 def fetch_microservice(microservice):
     return fetch_microservice_url(microservice)
+
+
+def remove_all_files(folder):
+    files = glob.glob(os.curdir + '/' + folder + '*')
+    for f in files:
+        os.remove(f)
