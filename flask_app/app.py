@@ -73,7 +73,7 @@ def download_button():
     if notes_response.status_code != 201:
         return error_page()
 
-    wav_response = convert_notes_to_midi(notes_response.text)
+    wav_response = get_wav_from_midi(notes_response.text)
     app.logger.info("Response:" + str(wav_response.status_code))
     if wav_response.status_code != 201:
         return error_page()
