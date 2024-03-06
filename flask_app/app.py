@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -30,6 +31,7 @@ config = {
 }
 app.config.from_mapping(config)
 cache = Cache(app)
+logging.basicConfig(level=logging.INFO)
 
 dbConnection = BorgDB()
 BorgDB.test_db_connection()
