@@ -2,6 +2,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .side{
@@ -35,10 +36,19 @@ body {
   height: 100%;
   background-color: white;
   border: 1px solid #ddd;
-  cursor: pointer;
+  cursor: crosshair;
+  transition: background .15s ease-in-out, border-radius .15s ease-in-out;
+  box-shadow: 2px 2px 2px 0px lightgray;
 }
 
-/* CSS */
+.grid-item:hover {
+  border-radius: 50%;
+}
+
+.clicked {
+  border-radius: 50%;
+}
+
 .grid-item.clicked.row-1 {
   background-color: violet;
 }
@@ -78,4 +88,42 @@ button {
 button i {
   font-size: 1rem; /* Set the icon size */
   margin-right: 1vh; /* Add space to the right of the icon */
+}
+
+#shape {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -10;
+}
+#shape span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #fff;
+  border-radius: 40% 50% 50% 40% / 40% 40% 50% 60%;
+  background: rgba(176, 6, 255, 0.1);
+  transition: 0.5s;
+}
+#shape span:nth-child(1) {
+  animation: animate 26s linear infinite;
+}
+#shape span:nth-child(2) {
+  animation: animate 24s linear infinite reverse;
+}
+#shape span:nth-child(3) {
+  animation: animate 30s linear infinite;
+}
+@keyframes animate {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
 }

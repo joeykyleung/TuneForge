@@ -5,3 +5,4 @@
 /.venv/
 db/__pycache__/
 flask_app/__pycache__
+storage/__pycache__
