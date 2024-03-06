@@ -167,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function sendToBackend() {
     //send json (notes, speed) to backend
+    getNotes();
     const data = {
       "notes": clickedNotes,
       "speed": parseFloat(speedInput.value),
