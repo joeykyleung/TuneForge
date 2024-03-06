@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     console.log(data);
-    fetch("/jsonmidi", {
+    fetch("/download", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
