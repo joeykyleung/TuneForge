@@ -115,6 +115,34 @@ var clickedNotes = Array.from({ length: 16 }, () => []);
 const playButton = document.getElementById("play-button");
 playButton.addEventListener("click", playSequence);
 
+function getMood() {
+  //send json (notes, speed) to backend
+  getNotes();
+  const data = {
+    "notes": clickedNotes,
+    "speed": parseFloat(speedInput.value),
+  };
+
+  console.log(data);
+  fetch("/get_mood", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    console.log(response.text());
+    return response.text();
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
 function getNotes() {
   const clickedElements = document.getElementsByClassName("clicked");
 
@@ -182,6 +210,7 @@ function sendToBackend() {
   const data = {
     "notes": clickedNotes,
     "speed": parseFloat(speedInput.value),
+    "instrument": instrumentNum,
   };
 
   console.log(data);
@@ -227,3 +256,46 @@ clearButton.addEventListener('click', () => {
   });
   clickedNotes = Array.from({ length: 16 }, () => []);
 });
+
+/*
+  FUNCTION FOR DROPDOWN
+*/
+const instrumentMap = {
+  1: "Acoustic Grand Piano",
+  9: "Celesta",
+  20: "Church Organ",
+  25: "Nylon Acoustic Guitar",
+  34: "Electric Bass (finger)",
+  41: "Violin",
+  49: "String Ensemble 1",
+  57: "Trumpet",
+  66: "Alto Sax",
+  74: "Flute",
+  81: "Square Lead",
+  91: "Pad 3 (polysynth)",
+  101: "FX 5 (brightness)",
+  105: "Sitar",
+  113: "Tinkle Bell",
+  121: "Guitar Fret Noise"
+};
+
+const dropdown = document.getElementById("dropdown");
+const instrumentButton = document.getElementById("instrumentButton");
+var instrumentNum = 1;
+
+// Iterate over the instrumentMap
+for (const [programNumber, instrumentName] of Object.entries(instrumentMap)) {
+  // Create a new list item
+  const listItem = document.createElement("li");
+  // Set its text content to the instrument name
+  listItem.textContent = instrumentName;
+  listItem.classList.add('dropdown-item');
+
+  listItem.addEventListener('click', () => {
+    instrumentButton.innerHTML = instrumentName;
+    instrumentNum = programNumber;
+  });
+
+  // Append the list item to the dropdown
+  dropdown.appendChild(listItem);
+}
