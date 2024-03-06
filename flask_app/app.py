@@ -44,7 +44,8 @@ BorgDB.test_db_connection()
 @app.route('/')
 def home_page():
     remove_all_files(downloads_folder)
-    app.logger.info("Clearing azure storage blobs: " + str(azureStorage.clear_blobs(SESSION_NAME, hours= 1)))
+    app.logger.info("Clearing azure storage blobs: " +
+                    str(azureStorage.clear_blobs(SESSION_NAME, hours= 1)))
     return render_template('home_page.html')
 
 

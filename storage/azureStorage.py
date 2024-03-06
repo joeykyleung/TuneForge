@@ -9,7 +9,6 @@ import logging
 (logging.getLogger("azure.core.pipeline.transport.http_requests")
  .setLevel(logging.WARNING))
 
-# Now, when you use the azure-storage-blob library, only warnings and errors will be logged
 
 # Initialize the BlobServiceClient using the connection string
 connection_string = environ.get("AZURE_STORAGE_CONNECTION_STRING", '')
