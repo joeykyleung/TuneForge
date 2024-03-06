@@ -1,8 +1,10 @@
 import logging
 import os
+import randomname
+from datetime import datetime
 
 import requests
-from flask import Flask, render_template, redirect, request, send_file, jsonify
+from flask import Flask, render_template, redirect, request, send_file
 from flask_caching import Cache
 
 from db.DBClass import BorgDB
@@ -18,6 +20,8 @@ class Microservices(Enum):
     WAVE_EXPORTER = 'wavexporter'
     SOUND_MOOD = 'soundmood'
 
+
+SESSION_NAME = randomname.get_name()
 
 downloads_folder = 'downloads/'
 if not os.path.exists(downloads_folder):
@@ -40,6 +44,7 @@ BorgDB.test_db_connection()
 @app.route('/')
 def home_page():
     remove_all_files(downloads_folder)
+    app.logger.info("Clearing azure storage blobs: " + str(azureStorage.clear_blobs(SESSION_NAME, hours= 1)))
     return render_template('home_page.html')
 
 
@@ -100,6 +105,16 @@ def generate_mood():
     return mood, 200
 
 
+@cache.memoize(1500)
+def fetch_microservice(microservice):
+    return fetch_microservice_url(microservice)
+
+
+def get_name(extension):
+    current_time = datetime.now().strftime("%d-%H-%M-%S")
+    return SESSION_NAME + '-' + current_time + extension.lower()
+
+
 def get_mood_from_wav(wav_blob):
     mood_endpoint = fetch_microservice(
         Microservices.SOUND_MOOD.value)
@@ -140,6 +155,7 @@ def convert_notes_to_midi(notes):
     notes_converter_endpoint = notes_converter_url + '/'
     app.logger.info("Sending request to " + notes_converter_endpoint
                     + " with notes: " + str(notes))
+    notes['midi_filename'] = get_name('.mid')
     return requests.post(notes_converter_endpoint, json=notes)
 
 
@@ -151,11 +167,6 @@ def get_wav_from_midi(midi_blob):
     app.logger.info('Sending request to ' + wavexporter_endpoint
                     + ' with midi blob: ' + str(midi_blob))
     return requests.post(wavexporter_endpoint, json=midi_dict)
-
-
-@cache.memoize(1500)
-def fetch_microservice(microservice):
-    return fetch_microservice_url(microservice)
 
 
 def add_junk(notes):
