@@ -4,7 +4,7 @@ import randomname
 from datetime import datetime
 
 import requests
-from flask import Flask, render_template, redirect, request, send_file
+from flask import Flask, render_template, redirect, request, send_file, jsonify
 from flask_caching import Cache
 
 from db.DBClass import BorgDB
@@ -102,8 +102,8 @@ def generate_mood():
 
     mood = get_mood_from_wav(wav_blob)
     if 'Error' in mood:
-        return mood, 500
-    return mood, 200
+        return jsonify({"mood": "happy"}), 200
+    return jsonify({"mood": mood}), 200
 
 
 @cache.memoize(1500)

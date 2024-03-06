@@ -135,8 +135,20 @@ function getMood() {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    console.log(response.text());
-    return response.text();
+    return response.json();
+  })
+  .then(json => {
+    const mood = json["mood"];
+    const shapes = document.getElementById("shape");
+    const shape = shapes.querySelectorAll('span');
+    shape.forEach(element => {
+      console.log(element);
+      if (mood === "sad") {
+        element.style.background = "rgba(0, 105, 255, 0.1)";
+      } else {
+        element.style.background = "rgba(248, 214, 100, 0.1)";
+      }
+    });
   })
   .catch(error => {
     console.error('There was a problem with the fetch operation:', error);
@@ -163,6 +175,7 @@ function getNotes() {
 function playSequence() {
   getNotes();
   console.log(clickedNotes);
+  getMood();
   const maxNotes = Math.max(...clickedNotes.map((column) => column.length));
   const sequenceDuration = 300 / speedInput.value; // Adjust the duration between columns
 
