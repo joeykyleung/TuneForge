@@ -40,7 +40,7 @@ def delete(blob_name):
 
 
 def clear_blobs(session, hours=1):
-    blob_list = container_client.list_blobs(name_starts_with=session)
+    blob_list = container_client.list_blobs()
     current_time = datetime.now()
     cutoff_time = current_time - timedelta(hours=hours)
     error = None
@@ -50,10 +50,11 @@ def clear_blobs(session, hours=1):
         try:
             ts = blob.name.strip(session).split('.')[0].split('-')
             params = [int(ts[i]) for i in range(len(ts))]
-            if cutoff_time.day >= params[0] and \
-                    cutoff_time.hour >= params[1] and \
-                    cutoff_time.minute >= params[2] and \
-                    cutoff_time.second >= params[3]:
+            if (cutoff_time.month >= params[0] and
+                    cutoff_time.day >= params[1] and
+                    cutoff_time.hour >= params[2] and
+                    cutoff_time.minute >= params[3] and
+                    cutoff_time.second >= params[4]):
                 num_deleted += 1
                 delete(blob.name)
         except Exception as e:

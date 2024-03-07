@@ -112,7 +112,7 @@ def fetch_microservice(microservice):
 
 
 def get_name(extension):
-    current_time = datetime.now().strftime("%d-%H-%M-%S")
+    current_time = datetime.now().strftime("%m-%d-%H-%M-%S")
     return SESSION_NAME + '-' + current_time + extension.lower()
 
 
