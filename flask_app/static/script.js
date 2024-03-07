@@ -52,7 +52,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function addEventListeners(gridItem, row) {
+  gridItem.addEventListener('mousedown', () => {
+    isAddingNotes = true;
+    if (!gridItem.classList.contains('clicked')) {
+      gridItem.classList.add('clicked');
+    } else {
+      gridItem.classList.remove('clicked');
+      isAddingNotes = false;
+    }
+  });
+  gridItem.addEventListener('mouseup', () => {
+    if(gridItem.classList.contains('clicked') && isAddingNotes === false) {
+      gridItem.classList.remove('clicked');
+    }
+  });
   gridItem.addEventListener('mouseover', () => {
+    console.log(`isMouseDown: ${isMouseDown}, isAddingNotes: ${isAddingNotes}`);
     if (isMouseDown && !gridItem.classList.contains('clicked')) {
       gridItem.classList.add('clicked');
       isAddingNotes = true;
