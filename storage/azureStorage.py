@@ -48,7 +48,7 @@ def clear_blobs(session, hours=1):
 
     for blob in blob_list:
         try:
-            ts = blob.name.strip(session).split('.')[0].split('-')
+            ts = blob.name.split('.')[0].split('-')[2:]
             params = [int(ts[i]) for i in range(len(ts))]
             if (cutoff_time.month >= params[0] and
                     cutoff_time.day >= params[1] and
