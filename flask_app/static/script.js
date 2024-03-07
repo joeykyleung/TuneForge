@@ -56,6 +56,7 @@ function addEventListeners(gridItem, row) {
     isAddingNotes = true;
     if (!gridItem.classList.contains('clicked')) {
       gridItem.classList.add('clicked');
+      playSound(rowNotes[row]);
     } else {
       gridItem.classList.remove('clicked');
       isAddingNotes = false;
