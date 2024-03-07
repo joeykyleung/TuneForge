@@ -74,7 +74,8 @@ def download_button():
     notes = request.get_json()
     wav_blob = get_wav_blob(notes)
     if 'Error' in wav_blob:
-        app.logger.error('Could not make wav file from notes: ' + wav_blob)
+        app.logger.error('Error: Could not make wav file from notes: '
+                         + wav_blob)
         return error_page(Exception(wav_blob))
 
     local_wav = downloads_folder + wav_blob
@@ -93,12 +94,12 @@ def generate_mood():
     notes = add_junk(request.get_json())
     if not notes:
         app.logger.error('Notes could not be obtained from post request')
-        return 'Error', 500
+        return 'Error: make sure the post request is formatted right.', 422
 
     wav_blob = get_wav_blob(add_junk(notes))
     if 'Error' in wav_blob:
-        app.logger.error('Could not make wav file from notes: ' + wav_blob)
-        return 'Error', 500
+        app.logger.error('Error: Could not make wav file from notes: ' + wav_blob)
+        return 'Error: error in generating wav file from notes.', 500
 
     mood = get_mood_from_wav(wav_blob)
     if 'Error' in mood:
@@ -125,27 +126,35 @@ def get_mood_from_wav(wav_blob):
     upload_response = requests.post(mood_upload_endpoint,
                                     json={'wav': wav_blob})
     if upload_response.status_code != 200:
+        app.logger.error('Error: From Sound Mood Generator - '
+                         + str(upload_response.text))
         return 'Error: upload failed to sound mood generator.'
 
     mood_predict_endpoint = mood_endpoint + '/api/predict'
     predict_response = requests.get(mood_predict_endpoint)
     if predict_response.status_code != 200:
-        return 'Error: mood generation failed due to some reason.'
+        app.logger.error('Error: From Sound Mood Generator - '
+                         + 'Unexpected failure in prediction.')
+        return 'Error: mood generation failed. Please investigate.'
 
     return predict_response.json()[0]
 
 
 def get_wav_blob(notes):
     notes_response = convert_notes_to_midi(notes)
-    app.logger.info("Response:" + str(notes_response.status_code)
+    app.logger.info("Notes converter response:" + str(notes_response.status_code)
                     + " with text: " + notes_response.text)
     if notes_response.status_code != 201:
-        return 'Error in notes microservice.'
+        app.logger.error(notes_response.text)
+        return 'Error: Notes Converter experienced an unexpected error.'
 
     wav_response = get_wav_from_midi(notes_response.text)
-    app.logger.info("Response:" + str(wav_response.status_code))
+    app.logger.info("WavExporter response:" + str(wav_response.status_code)
+                    + " with text: " + wav_response.text)
     if wav_response.status_code != 201:
-        return 'Error in wave microservice.'
+        app.logger.error(wav_response.text)
+        return ('Error: WavExporter microservice '
+                + 'experienced an unexpected error.')
     wav_blob = wav_response.text
     return wav_blob
 
