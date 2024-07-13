@@ -1,11 +1,5 @@
-# BeatBoutique
+# TuneForge
 
-Core backend for SSE Term 2 project..
+Core backend for TuneForge
 
-Required Environment variables:
-DB_PWD=imperial;
-DB_USR=vnp23;
-FLASK_APP=flask_app/app.py
-CACHE_RESET_PWD=example_pwd
-AZURE_STORAGE_CONNECTION_STRING
-BLOB_CONTAINER_NAME
+Demo: https://youtu.be/DuF4sxc7YPc
